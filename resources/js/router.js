@@ -1,9 +1,12 @@
 import { createWebHistory, createRouter } from "vue-router";
+import store from "./store";
 
 import Home from './views/Home.vue';
 import Register from './views/Register.vue';
 import Login from './views/Login.vue';
 import Dashboard from './views/Dashboard.vue';
+import CreateTask from './views/tasks/CreateTask.vue';
+
 
 const routes = [
     {
@@ -35,6 +38,14 @@ const routes = [
             requiresAuth: true
         }
     },
+    {
+        path: '/tasks/create',
+        name: 'CreateTask',
+        component: CreateTask,
+        meta: {
+            requiresAuth: true
+        }
+    },
 ];
 
 
@@ -43,13 +54,14 @@ const router = createRouter({
     routes,
 });
 
+
 router.beforeEach((to, from) => {
-    if (to.meta.requiresAuth && !localStorage.getItem('btoken')) { // if route requires authentication and user is not logged in
+    if (to.meta.requiresAuth && !store.getters.getBToken) { // if route requires authentication and user is not logged in
         // if not logged redirect to login page
         return { name: 'Login' };
     }
 
-    if (to.meta.requiresAuth === false && localStorage.getItem('btoken')) { // if route doesn't requires authentication and user is logged in
+    if (to.meta.requiresAuth === false && store.getters.getBToken) { // if route doesn't requires authentication and user is logged in
         return { name: 'Dashboard' };
     }
 });

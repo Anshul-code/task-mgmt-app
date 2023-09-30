@@ -6,14 +6,7 @@
                     <div class="card-body">
                         <h4 class="card-title">Register</h4>
 
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" v-if="errors.length != 0">
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            <strong>Check Following Errors</strong><hr>
-                            <div v-for="(items, index) in errors" :key="index">
-                                <p v-for="(err, k) in items" :key="k">{{ err }}</p>
-                            </div>
-                        </div>
-                        
+                        <Alert :errors="errors"/>
                         
                         <!-- Register Form Start -->
                         <form method="post" @submit.prevent="handleRegister()">
@@ -82,6 +75,7 @@
 import { reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import Alert from '../components/Alert.vue';
 
 const store = useStore();
 const router = useRouter();
@@ -101,26 +95,33 @@ const handleRegister = async() => { // Handle User Registeration on submit
     try{
         const response = await axios.post('/api/register', form);
        
-        if(response.data.success) {
-            store.dispatch('setBToken', response.data.token);
-            router.push({name: 'Dashboard'});
-        } else {
-            setCustomError(response.data.message);
+        if(response) {
+            if(response.data.success) {
+                store.dispatch('setBToken', response.data.token);
+                store.dispatch('setUser', response.data.user);
+
+                // redirect to dashboard
+                router.push({name: 'Dashboard'});
+            } else {
+                setCustomError(response.data.message);
+            }
         }
     } catch (error) {
-        if(error.response.status == 422) {
-            errors.value = error.response.data.errors;
+        console.log(error);
+        if(error) {
+            if(error.response.status == 422) {
+                errors.value = error.response.data.errors;
+            }
+            if(error.response.status == 500) {
+                setCustomError(error.response.statusText);
+            }
         }
-        if(error.response.status == 500) {
-            setCustomError(error.response.statusText);
-        }
-        console.error(error);
     }
 };
 
 const setCustomError = (message) => { // set custom error object
     errors.value= { custom_error : [ message ] };
-}
+};
 
 </script>
 

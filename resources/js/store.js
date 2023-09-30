@@ -1,10 +1,11 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
 // Create a new store instance.
 const store = createStore({
   state () {
     return {
-      btoken: localStorage.getItem('btoken') || null
+      btoken: localStorage.getItem('btoken') || null,
+      user: JSON.parse(localStorage.getItem('user')) || null,
     }
   },
   mutations: {
@@ -13,7 +14,13 @@ const store = createStore({
     },
     deleteBToken(state) {
         state.btoken = null;
-    }
+    },
+    updateUser(state, payload) {
+        state.user = payload;
+    },
+    deleteUser(state) {
+        state.user = null;
+    },
   },
   actions: {
     setBToken (context,payload) {
@@ -23,12 +30,23 @@ const store = createStore({
     removeBToken(context) {
         localStorage.removeItem('btoken');
         context.commit('deleteBToken'); 
-    }
+    },
+    setUser (context,payload) {
+        localStorage.setItem('user', JSON.stringify(payload));
+        context.commit('updateUser', payload); 
+    },
+    removeUser(context) {
+        localStorage.removeItem('user');
+        context.commit('deleteUser'); 
+    },
   },
   getters: {
-    getBToken() {
+    getBToken(state) {
         return state.btoken;
-    }
+    },
+    getUser(state) {
+        return state.user;
+    },
   }
 })
 

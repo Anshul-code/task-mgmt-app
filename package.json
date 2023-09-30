@@ -14,12 +14,14 @@
         "@popperjs/core": "^2.11.8",
         "@vitejs/plugin-vue": "^4.3.4",
         "jquery": "^3.7.1",
+        "laravel-vue-pagination": "^4.1.1",
         "popper.js": "^1.16.1",
         "toastr": "^2.1.4",
         "vue": "^3.2.36",
         "vue-loader": "^17.2.2",
         "vue-router": "^4.2.5",
         "vue-toast-notification": "3.0",
+        "vue-toastification": "^2.0.0-rc.5",
         "vuex": "^4.0.2"
     }
 }

@@ -47,7 +47,7 @@ class AuthController extends Controller
         if ($user == null || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => __('Record with these credentials not found.')
+                'message' => __('These credentials do not match our records.')
             ]);
         }
 
@@ -61,5 +61,28 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Get Authenticated User
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkUser(): JsonResponse
+    {
+        $user = auth('sanctum')->user();
+
+        if(!$user) {
+            return response()->json([
+                'success' => false,
+                'data'    => null,
+                'message' => 'User not found.'
+            ]);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data'    => $user,
+            'message' => 'User found.'
+        ]);
+    }
 
 }
