@@ -34,7 +34,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 
     // Tasks routes
     Route::group(['prefix' => 'tasks', 'controller' => TaskController::class], function() {
-        Route::post('/index', 'index');
+        Route::get('/index', 'index');
         Route::post('/store', 'store');
         Route::post('/update/{task}', 'update');
         Route::delete('/delete/{task}', 'delete');

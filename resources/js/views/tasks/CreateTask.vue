@@ -67,6 +67,9 @@
                                         {{ item.name }} {{ $store?.getters.getUser?.id == item.id ? '(Me)' : '' }}
                                     </option>
                                 </select>
+                                <p class="form-text text-muted">
+                                    Hold CTRL for selecting multiple options.
+                                </p>
                             </div>
 
                             <hr>

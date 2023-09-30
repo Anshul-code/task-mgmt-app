@@ -21,7 +21,16 @@ class TaskController extends Controller
     {
         $authUser = auth('sanctum')->user();
         
-        $data = Task::where(function($query) use($request, $authUser) {
+        $data = Task::select('tasks.*')
+                    ->with([
+                        'createdBy' => function($q) {
+                            return $q->select('id','name');
+                        },
+                        'users' => function($q) {
+                            return $q->select('id','name');
+                        },
+                    ])
+                    ->where(function($query) use($request, $authUser) {
                         return $query->when(in_array($request->type, ['assigned-to-me', 'all']), function($queryWhen) use($authUser) {
                                         return $queryWhen->whereHas('users', function($q) use($authUser) {
                                             return $q->where('user_id', $authUser->id);
@@ -37,11 +46,6 @@ class TaskController extends Controller
                         return $q->where('status', $request->status);
                     })
                     ->latest()
-                    ->with([
-                        'createdBy' => function($q) {
-                            return $q->select('id','name');
-                        },
-                    ])
                     ->paginate($request->per_page ?: 10);
                     
 
@@ -126,8 +130,10 @@ class TaskController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data'    => $task,
-            'message' => __('Task Deleted.')
+            'data'    => $task->load(['users' => function($q) {
+                                    return $q->select('id');
+                                }]),
+            'message' => __('Task Found.')
         ]);
     }
 

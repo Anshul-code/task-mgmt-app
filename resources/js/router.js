@@ -6,6 +6,7 @@ import Register from './views/Register.vue';
 import Login from './views/Login.vue';
 import Dashboard from './views/Dashboard.vue';
 import CreateTask from './views/tasks/CreateTask.vue';
+import EditTask from './views/tasks/EditTask.vue';
 
 
 const routes = [
@@ -46,6 +47,14 @@ const routes = [
             requiresAuth: true
         }
     },
+    {
+        path: '/tasks/edit/:id',
+        name: 'EditTask',
+        component: EditTask,
+        meta: {
+            requiresAuth: true
+        }
+    },,
 ];
 
 
